@@ -73,3 +73,22 @@ def ode(Y, t, b, c) :
 
 drawPhasePortrait(args, 1, 1, -5, 5, -4, 4, ts = 0.5, nt = 301)
 #Task 2
+
+#Quest 3
+m = 0.2 * variant
+l = 5 / variant
+g = 9.81
+
+def ode(y, t, b, c) :
+    theta, omega = y
+    dydt = [omega, -m * g * l * np.sin(theta)]
+    return dydt
+
+drawPhasePortrait(args, 1, 1, -5, 5, -4, 4, ts = 0.5, nt = 301)
+
+def ode(y, t, b, c) :
+    theta, omega = y
+    dydt = [omega, (-b * omega) - (m * g * l * np.sin(theta))]
+    return dydt
+
+drawPhasePortrait(args, 1, 1, -5, 5, -4, 4, ts = 0.5, nt = 301)
