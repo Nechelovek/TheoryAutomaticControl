@@ -47,27 +47,27 @@ def ode(Y, t):
     return dydt
 
 drawPhasePortrait(-2, 2, -2, 2, 1, 1, -3, 4, -3, 3, ts=2, nt=201)
-#drawPhasePortrait(args, 1, 1, -1, 2, -5,5, ts = 0.5, nt = 150)
+drawPhasePortrait(args, 1, 1, -1, 2, -5,5, ts = 0.5, nt = 150)
 
-#
-# # #System 2
-# # #non lineary system
-# def ode(Y, t):
-#     x, y = Y
-#     dydt = [2 * x + 0.6 * (x ** 2) + y - 0.3 * (y ** 2), x - 3 * y]
-#     return dydt
-#
-# drawPhasePortrait(-7, 7, -10, 10, 1, 1, -10, 10, -7, 7, ts = 1, nt = 500)
-#
-# # lineary system
-# def ode(Y, t):
-#     x, y = Y
-#     dydt = [x + 0.5 * y, 0.5 * x + y]
-#     return dydt
-#
-# drawPhasePortrait(-7, 7, -10, 10, 1, 1, -10, 10, -5, 5, ts = 1, nt = 301)
-# # drawPhasePortrait(args, 1, 1, -5, 5, -4, 4, ts = 0.5, nt = 301)
-#
+
+# #System 2
+# #non lineary system
+def ode(Y, t):
+    x, y = Y
+    dydt = [2 * x + 0.6 * (x ** 2) + y - 0.3 * (y ** 2), x - 3 * y]
+    return dydt
+
+drawPhasePortrait(-7, 7, -10, 10, 1, 1, -10, 10, -7, 7, ts = 1, nt = 500)
+
+# lineary system
+def ode(Y, t):
+    x, y = Y
+    dydt = [x + 0.5 * y, 0.5 * x + y]
+    return dydt
+
+drawPhasePortrait(-7, 7, -10, 10, 1, 1, -10, 10, -5, 5, ts = 1, nt = 301)
+# drawPhasePortrait(args, 1, 1, -5, 5, -4, 4, ts = 0.5, nt = 301)
+
 #
 # #System 3
 # def ode(y, t) :
