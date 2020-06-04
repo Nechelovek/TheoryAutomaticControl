@@ -85,9 +85,9 @@ class real_object:
         return sol, t
 
     def getODE(self):
-        """
-        Получить "идеальную" модель объекта без параметров
-        """
+
+        #Получить "идеальную" модель объекта без параметров
+
         return self._ode
 
     def get_nonlinear_element_type(self):
@@ -96,9 +96,9 @@ class real_object:
 obj = real_object(variant)
 y0 = 1
 sol, t = obj.calcODE(y0)
-# plt.plot(t, sol)
-# plt.grid()
-# plt.show()
+plt.plot(t, sol)
+plt.grid()
+plt.show()
 
 def exp(sig):
     # Создаем экземпляр класса объекта
@@ -123,7 +123,7 @@ def exp(sig):
 def monoharm_u(x, t):
     return 1*np.sin(t * 0.025 * np.pi)
 
-#exp(monoharm_u)
+exp(monoharm_u)
 
 def monoharm_e(x, t):
     return 1*np.sin(t * 0.025 * np.pi)
@@ -138,7 +138,7 @@ def step_function(x, t):
         return 0
 step_function = np.vectorize(step_function, otypes = [np.float])
 
-#exp(step_function)
+exp(step_function)
 
 def impulse(x,t): #Aproksimatiya
   if t < 0.01:
@@ -147,18 +147,18 @@ def impulse(x,t): #Aproksimatiya
     return 0
 impulse = np.vectorize(impulse,  otypes = [np.float])
 
-#exp(impulse)
+exp(impulse)
 
 def square(x, t):
-    return 1 * signal.square(t * 0.025 * np.pi)
+    return 0.5 * signal.square(t * 0.025 * np.pi)
 
-#exp(square)
+exp(square)
 
 def whitenoise(x, t):
   return np.random.normal(1,1)
 whitenoise = np.vectorize(whitenoise, otypes=[np.float])
 
-#exp(whitenoise)
+exp(whitenoise)
 
 #Chapter 2
 from scipy import optimize
@@ -271,12 +271,12 @@ def ideal_model(signal):
     plt.grid()
     plt.show()
 
-# ideal_model(monoharm_u)
-# ideal_model(monoharm_e)
-# ideal_model(step_function)
-# ideal_model(impulse)
-# ideal_model(square)
-# ideal_model(whitenoise)
+ideal_model(monoharm_u)
+#ideal_model(monoharm_e)
+ideal_model(step_function)
+ideal_model(impulse)
+ideal_model(square)
+ideal_model(whitenoise)
 
 def ode_lin(x, t, k):
     """
@@ -290,7 +290,7 @@ def ode_lin(x, t, k):
     return dydt
 
 def lineary_model(signal):
-    guess = [0.2, 0.3]  # Начальные значения для параматров системы
+    guess = [0.2, 10.25, 0.35, 0.45]  # Начальные значения для параматров системы
     y0 = [0,]  # Стартовые начальные значения для системы ДУ
 
     obj = real_object(variant)
@@ -311,14 +311,14 @@ def lineary_model(signal):
     plt.grid()
     plt.show()
 
-# lineary_model(monoharm_e)
-# lineary_model(monoharm_u)
-# lineary_model(step_function)
-# lineary_model(impulse)
-# lineary_model(square)
-# lineary_model(whitenoise)
+#lineary_model(monoharm_e)
+lineary_model(monoharm_u)
+lineary_model(step_function)
+lineary_model(impulse)
+lineary_model(square)
+lineary_model(whitenoise)
 
-print(obj.get_nonlinear_element_type())
+# print(obj.get_nonlinear_element_type())
 
 def ode_non_lineary(x, t, k):
     obj = real_object(variant)
@@ -348,97 +348,107 @@ def non_lineary_model(signal):
     plt.legend()
     plt.show()
 
-non_lineary_model(monoharm_u)
-# non_lineary_model(monoharm_e)
-# non_lineary_model(step_function)
-# non_lineary_model(impulse)
-# non_lineary_model(square)
-# non_lineary_model(whitenoise)
+# non_lineary_model(monoharm_u)
+# # non_lineary_model(monoharm_e)
+# # non_lineary_model(step_function)
+# # non_lineary_model(impulse)
+# # non_lineary_model(square)
+# # non_lineary_model(whitenoise)
+#
+def series2dataset(data, seq_len):
+    """
+    Преобразование временной последовательнсти к формату датасета
+    Шаг дискретизации должен быть постоянным
+    """
+    dataset = []
+    for i in range(data.shape[0]-seq_len):
+        r = np.copy(data[i:i+seq_len])
+        dataset.append(r)
+    return np.array(dataset)
 
-# def series2dataset(data, seq_len):
-#     """
-#     Преобразование временной последовательнсти к формату датасета
-#     Шаг дискретизации должен быть постоянным
-#     """
-#     dataset = []
-#     for i in range(data.shape[0]-seq_len):
-#         r = np.copy(data[i:i+seq_len])
-#         dataset.append(r)
-#     return np.array(dataset)
-#
-# from sklearn.preprocessing import MinMaxScaler
-# from sklearn.metrics import mean_squared_error
-#
-# # normalize features
-# scaler = MinMaxScaler(feature_range=(-1, 1))
-#
-# values = monoharm_u(0, t)
-# model_order = 5
-# # Этой командой получается массив обучающих последовательностей с одного
-# # эксперимента, для работы с несколькими экспериментами, можно получить
-# # последовательно массивы отдельно по каждому эксперименту, а затем объединить
-# # массивы
-# x_values = series2dataset(values, model_order)
-# x_values = np.expand_dims(x_values,2)
-# print(x_values.shape)
-#
-# # Разделим на тестовую и обучающие выборки
-# # В случае использования нескольких экспериментов (>5), в качестве тестового
-# # лучше взять один из экспериментов целиком
-# n_train_samples = int(x_values.shape[0] * 0.7)
-#
-# train_X = x_values[:n_train_samples, :]
-# test_X = x_values[n_train_samples:, :]
-#
-# y_values = scaler.fit_transform(sol)
-# y_values = y_values[model_order:]
-# train_y = y_values[:n_train_samples]
-# test_y = y_values[n_train_samples:]
-#
-# print("Shape of train is {}, {}, shape of test is {}, {}".format(train_X.shape,
-#                                                                  train_y.shape,
-#                                                                  test_X.shape,
-#                                                                  test_y.shape))
-#
-# import tensorflow as tf
-# from tensorflow.keras.models import Sequential
-# from tensorflow.keras.layers import LSTM, Dense
-#
-# # design network
-# model = Sequential()
-# model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
-# model.add(Dense(1))
-# model.compile(loss='mean_squared_error', optimizer='adam')
-#
-# # fit network
-# history = model.fit(train_X,
-#                     train_y,
-#                     epochs=100,
-#                     batch_size=72,
-#                     validation_data=(test_X, test_y),
-#                     verbose=1,
-#                     shuffle=False)
-# # plot history
-# plt.plot(history.history['loss'], label='train')
-# plt.plot(history.history['val_loss'], label='test')
-# plt.legend()
-# plt.show()
-#
-# #
-# # from sklearn.preprocessing import LabelEncoder
-# # from sklearn.metrics import mean_squared_error
-# # from math import sqrt
-# #
-# # #делаем предсказание
-# # yhat = model.predict(test_X)
-# #
-# # # обратное масштабирование для прогноза
-# # inv_yhat = yhat #scaler.inverse_transform(yhat)
-# # #inv_yhat = inv_yhat[:,0]
-# # # обратное масштабирование для фактического
-# # inv_y = test_y #scaler.inverse_transform(test_y)
-# # #inv_y = inv_y[:,0]
-# # # calculate RMSE
-# # rmse = sqrt(mean_squared_error(inv_y, inv_yhat))
-# # print('Test RMSE: %.3f' % rmse)
-#
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import mean_squared_error
+
+# normalize features
+scaler = MinMaxScaler(feature_range=(-1, 1))
+
+values = monoharm_u(0, t)
+model_order = 5
+# Этой командой получается массив обучающих последовательностей с одного
+# эксперимента, для работы с несколькими экспериментами, можно получить
+# последовательно массивы отдельно по каждому эксперименту, а затем объединить
+# массивы
+x_values = series2dataset(values, model_order)
+x_values = np.expand_dims(x_values,2)
+print(x_values.shape)
+
+# Разделим на тестовую и обучающие выборки
+# В случае использования нескольких экспериментов (>5), в качестве тестового
+# лучше взять один из экспериментов целиком
+n_train_samples = int(x_values.shape[0] * 0.7)
+
+train_X = x_values[:n_train_samples, :]
+test_X = x_values[n_train_samples:, :]
+
+y_values = scaler.fit_transform(sol)
+y_values = y_values[model_order:]
+train_y = y_values[:n_train_samples]
+test_y = y_values[n_train_samples:]
+
+print("Shape of train is {}, {}, shape of test is {}, {}".format(train_X.shape,
+                                                                 train_y.shape,
+                                                                 test_X.shape,
+                                                                 test_y.shape))
+
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+
+# design network
+model = Sequential()
+model.add(LSTM(50, input_shape=(train_X.shape[1], train_X.shape[2])))
+model.add(Dense(1))
+model.compile(loss='mean_squared_error', optimizer='adam')
+
+# fit network
+history = model.fit(train_X,
+                    train_y,
+                    epochs=100,
+                    batch_size=72,
+                    validation_data=(test_X, test_y),
+                    verbose=1,
+                    shuffle=False)
+# plot history
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show()
+
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+#делаем предсказание
+yhat = model.predict(test_X)
+
+# обратное масштабирование для прогноза
+inv_yhat = yhat #scaler.inverse_transform(yhat)
+#inv_yhat = inv_yhat[:,0]
+# обратное масштабирование для фактического
+inv_y = test_y #scaler.inverse_transform(test_y)
+#inv_y = inv_y[:,0]
+# calculate RMSE
+rmse = sqrt(mean_squared_error(inv_y, inv_yhat))
+print('Test RMSE: %.3f' % rmse)
+
+
+# Соединяем обратно входные данные
+X = np.concatenate((train_X, test_X), axis=0)
+Y_real = np.concatenate((train_y, test_y), axis=0)
+#делаем предсказание
+Y = model.predict(X)
+
+print(X.shape, Y.shape)
+
+plt.plot(Y)
+plt.plot(Y_real)
